@@ -976,3 +976,38 @@ test('ts-refclk-sess', function *(t) {
   t.equal(sessTsRefClocks[0].clksrc, 'ntp', 'NTP Clock Source');
   t.equal(sessTsRefClocks[0].clksrcExt, '/traceable/', 'traceable Clock Source');
 });
+
+test('datachannel description', function *(t) {
+  var sdp = yield fs.readFile(__dirname + '/dc.sdp', 'utf8');
+
+  var session = parse(sdp+'');
+  t.ok(session, 'got session info');
+
+  var media = session.media;
+  t.ok(media && media.length == 1, 'got single media');
+
+  var application = media[0];
+  t.ok(application.dcdirs && application.dcdirs.length == 1, 'got dcdirs');
+  t.deepEqual(application.dcdirs[0], {
+    id: 1,
+    direction: 'sendonly'
+  }, 'dcdir');
+  t.ok(application.dcmaps && application.dcmaps.length == 2, 'got dcmaps');
+  t.deepEqual(application.dcmaps[0], {
+    id: 0
+  }, 'dcmap 0');
+  t.deepEqual(application.dcmaps[1], {
+    id: 1,
+    options: 'subprotocol="msrp";ordered=true;label="msrp"'
+  }, 'dcmap 1');
+  t.ok(application.dcsas && application.dcsas.length == 2, 'got dcsas');
+  t.deepEqual(application.dcsas[0], {
+    id: 1,
+    attribute: 'accept-types',
+    value: 'text/plain'
+  }, 'dcsa 0');
+  t.deepEqual(application.dcsas[1], {
+    id: 1,
+    attribute: 'msrp-cema',
+  }, 'dcsa 1');
+});
