@@ -1,3 +1,7 @@
+2.15.0 / 2024-01-25 (Sorenson versioning begins)
+===================
+  * `a=dcmap` and `a=dcsa` parsing
+
 2.14.1 / 2020-12-02
 ===================
   * Fix `a=rtcp-fb` bug where trr-int is `*` via #91
